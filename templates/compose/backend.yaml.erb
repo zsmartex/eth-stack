@@ -1,0 +1,11 @@
+version: 3.8
+
+services:
+  db:
+    image: mysql:8.0.26
+    volumes:
+      ../data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: ortelius
+  

@@ -1,0 +1,14 @@
+app:
+  name: AVAX-Stack
+  domain: avax.stack
+  subdomain: www
+  ssl: false
+images:
+  ortelius: ortelius
+  explorer: ortelius
+  wallet: wallet
+db:
+  host: db
+  port: 3306
+  user: root
+  password: changeme
