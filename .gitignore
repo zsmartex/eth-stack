@@ -3,6 +3,8 @@ compose/*
 
 config/ortelius/*
 !config/ortelius/.gitkeep
+config/traefik/*
+!config/traefik/.gitkeep
 
 data/avalanche/*
 !data/avalanche/.gitkeep

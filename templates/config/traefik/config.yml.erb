@@ -1,0 +1,35 @@
+entryPoints:
+  web:
+    address: ":80"
+<% if @config['app']['ssl'] -%>
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+<% end -%>
+<% if @config['app']['ssl'] -%>
+tls:
+  options:
+    default:
+      minVersion: VersionTLS10
+      maxVersion: VersionTLS13
+<% end -%>
+
+api:
+  insecure: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedbydefault: false
+    useBindPortIP: true
+    watch: true
+  file:
+    filename: /etc/traefik/dyn.yml
+
+log:
+  level: DEBUG
