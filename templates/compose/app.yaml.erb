@@ -11,7 +11,7 @@ services:
       - migrate
     volumes:
       - avalanche-ipcs:/tmp
-      - ../ortelius/config.json:/opt/config.json
+      - ../config/ortelius/config.json:/opt/config.json
     restart: on-failure
 
   avalanche:
