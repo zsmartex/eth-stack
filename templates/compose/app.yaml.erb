@@ -21,8 +21,6 @@ services:
       - indexer
     ports:
       - "9650:9650"
-    env_file:
-      - production.env
     volumes:
       - ../data/avalanche:/var/lib/avalanche
       - ../config/avalanche/config.json:/opt/config.json
