@@ -5,7 +5,7 @@ services:
     image: mysql:8.0.26
     restart: on-failure
     volumes:
-      ../data/db:/var/lib/mysql
+      - ../data/db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: <%= @config['database']['password'] %>
       MYSQL_DATABASE: ortelius
