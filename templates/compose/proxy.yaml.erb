@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../config/traefik/dyn.yml:/etc/traefik/dyn.yml
+      - ../config/traefik/config.yml:/etc/traefik/traefik.yml
+      <%= '- ../data/ssl:/etc/traefik/certs:ro' if @config['app']['ssl'] %>
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.routers.traefik-<%= @name %>.rule=Host(`traefik.<%= @config['app']['domain'] %>`)"
+      - "traefik.http.services.traefik-<%= @name %>.loadbalancer.server.port=8080"
+      - "traefik.enable=true"
+      <%- if @config['app']['ssl'] -%>
+      - "traefik.http.routers.traefik-<%= @name %>.entrypoints=websecure"
+      - "traefik.http.routers.traefik-<%= @name %>.tls=true"
+      <%- else -%>
+      - "traefik.http.routers.traefik-<%= @name %>.entrypoints=web"
+      <%- end -%>

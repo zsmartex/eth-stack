@@ -1,8 +1,7 @@
 app:
   name: AVAX-Stack
-  domain: avax.stack
-  subdomain: www
-  ssl: false
+  domain: zsmartex.tech
+  ssl: true
 images:
   ortelius: ortelius
   explorer: ortelius

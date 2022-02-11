@@ -2,7 +2,8 @@ version: "3.8"
 
 services:
   indexer: &ortelius-app
-    image: "avaplatform/ortelius:v1.7.5"
+    build:
+      context: ../vendor/ortelius
     command: ["stream", "indexer", "-c", "/opt/config.json"]
     external_links:
       - <%= @config['database']['host'] %>
@@ -15,24 +16,60 @@ services:
     restart: on-failure
 
   avalanche:
-    image: "avaplatform/avalanchego:v1.7.5"
+    build:
+      context: ../vendor/avalanchego
     restart: always
     depends_on:
       - indexer
-    ports:
-      - "9650:9650"
     volumes:
       - ../data/avalanche:/var/lib/avalanche
       - ../config/avalanche/config.json:/opt/config.json
       - ../config/avalanche/chain:/opt/avalanchego
       - avalanche-ipcs:/tmp
+    labels:
+      - "traefik.http.routers.avalanche-<%= @name %>.rule=Host(`rpc.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
+      - "traefik.http.services.avalanche-<%= @name %>.loadbalancer.server.port=3000"
+      - "traefik.enable=true"
+      <%- if @config['app']['ssl'] -%>
+      - "traefik.http.routers.avalanche-<%= @name %>.entrypoints=websecure"
+      - "traefik.http.routers.avalanche-<%= @name %>.tls=true"
+      <%- else -%>
+      - "traefik.http.routers.avalanche-<%= @name %>.entrypoints=web"
+      <%- end -%>
     command: /bin/sh -cx "exec /avalanchego/build/avalanchego --config-file=/opt/config.json --network-id=1"
 
   api:
     <<: *ortelius-app
     command: ["api", "-c", "/opt/config.json"]
-    ports:
-      - 8080:8080
+    labels:
+      - "traefik.http.routers.explorer-api-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/api`)"
+      - "traefik.http.services.explorer-api-<%= @name %>.loadbalancer.server.port=3000"
+      - "traefik.enable=true"
+      <%- if @config['app']['ssl'] -%>
+      - "traefik.http.routers.explorer-api-<%= @name %>.entrypoints=websecure"
+      - "traefik.http.routers.explorer-api-<%= @name %>.tls=true"
+      <%- else -%>
+      - "traefik.http.routers.explorer-api-<%= @name %>.entrypoints=web"
+      <%- end -%>
+
+  explorer:
+    build:
+      context: ../vendor/avalanche-explorer
+    restart: always
+    environment:
+      VUE_APP_ORTELIUS_URL: explorer.<%= @config['app']['domain'] %>
+      VUE_APP_CCHAIN_EXPLORER_URL: rpc.<%= @config['app']['domain'] %>
+      VUE_APP_HTTP_PORT: 3000
+    labels:
+      - "traefik.http.routers.explorer-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
+      - "traefik.http.services.explorer-<%= @name %>.loadbalancer.server.port=3000"
+      - "traefik.enable=true"
+      <%- if @config['app']['ssl'] -%>
+      - "traefik.http.routers.explorer-<%= @name %>.entrypoints=websecure"
+      - "traefik.http.routers.explorer-<%= @name %>.tls=true"
+      <%- else -%>
+      - "traefik.http.routers.explorer-<%= @name %>.entrypoints=web"
+      <%- end -%>
 
 volumes:
   avalanche-ipcs:

@@ -6,9 +6,10 @@ config/ortelius/*
 
 data/avalanche/*
 !data/avalanche/.gitkeep
-
 data/db/*
 !data/db/.gitkeep
+data/ssl/*
+!data/ssl/.gitkeep
 
 data/vendor/*
 !data/vendor/.gitkeep
