@@ -7,7 +7,7 @@ images:
   ortelius: ortelius
   explorer: ortelius
   wallet: wallet
-db:
+database:
   host: db
   port: 3306
   user: root

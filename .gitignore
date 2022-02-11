@@ -1,2 +1,14 @@
 compose/*
 !compose/.gitkeep
+
+config/ortelius/*
+!config/ortelius/.gitkeep
+
+data/avalanche/*
+!data/avalanche/.gitkeep
+
+data/db/*
+!data/db/.gitkeep
+
+data/vendor/*
+!data/vendor/.gitkeep

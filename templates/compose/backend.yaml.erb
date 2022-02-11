@@ -1,11 +1,24 @@
 version: 3.8
 
 services:
-  db:
+  <%= @config['database']['host'] %>:
     image: mysql:8.0.26
+    restart: on-failure
     volumes:
       ../data/db:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_ROOT_PASSWORD: <%= @config['database']['password'] %>
       MYSQL_DATABASE: ortelius
-  
+
+  migrate:
+    image: "migrate/migrate:v4.14.1"
+    restart: on-failure
+    depends_on:
+      - <%= @config['database']['host'] %>
+    volumes:
+      - ../vendor/ortelius/services/db/migrations:/migrations
+    entrypoint: ["/bin/sh"]
+    command: |
+      -c 'while ! migrate -path=/migrations/ -database "mysql://<%= @config['database']['user'] %>:<%= @config['database']['password'] %>@tcp(<%= @config['database']['host'] %>:<%= @config['database']['port'] %>)/ortelius" up; do
+        sleep 1
+      done'
