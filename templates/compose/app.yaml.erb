@@ -1,4 +1,4 @@
-version: 3.8
+version: "3.8"
 
 services:
   indexer: &ortelius-app
@@ -35,3 +35,6 @@ services:
     command: ["api", "-c", "/opt/config.json"]
     ports:
       - 8080:8080
+
+volumes:
+  avalanche-ipcs:
