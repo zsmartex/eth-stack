@@ -28,7 +28,7 @@ services:
       - avalanche-ipcs:/tmp
     labels:
       - "traefik.http.routers.avalanche-<%= @name %>.rule=Host(`rpc.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
-      - "traefik.http.services.avalanche-<%= @name %>.loadbalancer.server.port=3000"
+      - "traefik.http.services.avalanche-<%= @name %>.loadbalancer.server.port=9650"
       - "traefik.enable=true"
       <%- if @config['app']['ssl'] -%>
       - "traefik.http.routers.avalanche-<%= @name %>.entrypoints=websecure"
