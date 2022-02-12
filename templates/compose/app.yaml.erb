@@ -53,8 +53,7 @@ services:
       <%- end -%>
 
   explorer:
-    build:
-      context: ../vendor/avalanche-explorer
+    image: <%= @config['images']['explorer'] %>
     restart: always
     labels:
       - "traefik.http.routers.explorer-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
