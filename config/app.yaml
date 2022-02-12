@@ -4,7 +4,7 @@ app:
   ssl: true
 images:
   ortelius: ortelius
-  explorer: ortelius
+  explorer: explorer
   wallet: wallet
 database:
   host: db
