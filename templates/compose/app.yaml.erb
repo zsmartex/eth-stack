@@ -59,7 +59,6 @@ services:
     environment:
       VUE_APP_ORTELIUS_URL: explorer.<%= @config['app']['domain'] %>
       VUE_APP_CCHAIN_EXPLORER_URL: rpc.<%= @config['app']['domain'] %>
-      VUE_APP_HTTP_PORT: 3000
     labels:
       - "traefik.http.routers.explorer-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
       - "traefik.http.services.explorer-<%= @name %>.loadbalancer.server.port=3000"
