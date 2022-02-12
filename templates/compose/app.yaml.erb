@@ -58,6 +58,7 @@ services:
     restart: always
     environment:
       VUE_APP_ORTELIUS_URL: explorer.<%= @config['app']['domain'] %>
+      VUE_APP_AVALANCHE_GO_URL: rpc.<%= @config['app']['domain'] %>
       VUE_APP_CCHAIN_EXPLORER_URL: rpc.<%= @config['app']['domain'] %>
     labels:
       - "traefik.http.routers.explorer-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
