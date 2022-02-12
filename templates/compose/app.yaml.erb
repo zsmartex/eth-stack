@@ -43,7 +43,7 @@ services:
     command: ["api", "-c", "/opt/config.json"]
     labels:
       - "traefik.http.routers.explorer-api-<%= @name %>.rule=Host(`api.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
-      - "traefik.http.services.explorer-api-<%= @name %>.loadbalancer.server.port=3000"
+      - "traefik.http.services.explorer-api-<%= @name %>.loadbalancer.server.port=8080"
       - "traefik.enable=true"
       <%- if @config['app']['ssl'] -%>
       - "traefik.http.routers.explorer-api-<%= @name %>.entrypoints=websecure"
