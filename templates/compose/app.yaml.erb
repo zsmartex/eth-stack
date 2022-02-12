@@ -51,6 +51,11 @@ services:
       <%- else -%>
       - "traefik.http.routers.explorer-api-<%= @name %>.entrypoints=web"
       <%- end -%>
+      - "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=*"
+      - "traefik.http.middlewares.testheader.headers.accesscontrolalloworigin=*"
+      - "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+      - "traefik.http.middlewares.testheader.headers.allowedHosts=explorer.<%= @config['app']['domain'] %>,api.<%= @config['app']['domain'] %>"
 
   explorer:
     image: <%= @config['images']['explorer'] %>
