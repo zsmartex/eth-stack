@@ -36,6 +36,9 @@ services:
       <%- else -%>
       - "traefik.http.routers.avalanche-<%= @name %>.entrypoints=web"
       <%- end -%>
+      - "traefik.http.middlewares.corsHeader.headers.accesscontrolallowmethods=GET,POST,OPTIONS,DELETE,PUT"
+      - "traefik.http.middlewares.corsHeader.headers.accesscontrolalloworiginlist=explorer.<%= @config['app']['domain'] %>,api.<%= @config['app']['domain'] %>,wallet.avax.network"
+      - "traefik.http.middlewares.corsHeader.headers.addvaryheader=true"
     command: /bin/sh -cx "exec /avalanchego/build/avalanchego --config-file=/opt/config.json --network-id=1"
 
   api:
