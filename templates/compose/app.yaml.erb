@@ -26,4 +26,14 @@ services:
     restart: always
     env_file:
       -  ../config/blockscout.env
+    labels:
+      - "traefik.http.routers.blockscout-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
+      - "traefik.http.services.blockscout-<%= @name %>.loadbalancer.server.port=4000"
+      - "traefik.enable=true"
+      <%- if @config['app']['ssl'] -%>
+      - "traefik.http.routers.blockscout-<%= @name %>.entrypoints=websecure"
+      - "traefik.http.routers.blockscout-<%= @name %>.tls=true"
+      <%- else -%>
+      - "traefik.http.routers.blockscout-<%= @name %>.entrypoints=web"
+      <%- end -%>
     command: 'mix do ecto.create, ecto.migrate, phx.server'
