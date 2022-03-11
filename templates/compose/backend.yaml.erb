@@ -10,3 +10,4 @@ services:
       POSTGRES_USER: <%= @config['database']['user'] %>
       POSTGRES_PASSWORD: <%= @config['database']['password'] %>
       POSTGRES_DB: blockscout
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
