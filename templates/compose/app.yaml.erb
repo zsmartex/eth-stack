@@ -26,3 +26,4 @@ services:
     restart: always
     env_file:
       -  ../config/blockscout.env
+    command: 'mix do ecto.create, ecto.migrate, phx.server'
