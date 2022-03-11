@@ -5,7 +5,7 @@ services:
     image: postgres:13.6
     restart: on-failure
     volumes:
-      - ../data/db:/var/lib/postgresql/data
+      - ../data/pg:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: <%= @config['database']['user'] %>
       POSTGRES_PASSWORD: <%= @config['database']['password'] %>
