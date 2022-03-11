@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   <%= @config['database']['host'] %>:
-    image: postgres
+    image: postgres:13.6
     restart: on-failure
     volumes:
       - ../data/db:/var/lib/postgresql/data
