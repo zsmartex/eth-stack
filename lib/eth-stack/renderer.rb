@@ -6,7 +6,7 @@ require 'yaml'
 require 'base64'
 require 'fileutils'
 
-module AVAXStack
+module ETHStack
   # Renderer is class for rendering Opendax templates.
   class Renderer
     TEMPLATE_PATH = Pathname.new('./templates')

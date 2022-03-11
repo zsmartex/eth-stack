@@ -1,8 +1,0 @@
-{
-  "db-dir": "/var/lib/avalanche",
-  "log-level": "info",
-  "http-host": "0.0.0.0",
-  "index-enabled": "true",
-  "network-minimum-timeout": "3s",
-  "chain-config-dir": "/opt/avalanchego"
-}

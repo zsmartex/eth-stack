@@ -1,11 +1,9 @@
 app:
-  name: AVAX-Stack
+  name: ETH-Stack
   domain: zsmartex.tech
   ssl: true
 images:
-  ortelius: ortelius
   explorer: explorer
-  wallet: wallet
 database:
   host: db
   port: 3306

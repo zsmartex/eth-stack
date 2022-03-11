@@ -1,75 +1,28 @@
 version: "3.8"
 
 services:
-  indexer: &ortelius-app
-    build:
-      context: ../vendor/ortelius
-    command: ["stream", "indexer", "-c", "/opt/config.json"]
-    external_links:
-      - <%= @config['database']['host'] %>
-    depends_on:
-      - <%= @config['database']['host'] %>
-      - migrate
-    volumes:
-      - avalanche-ipcs:/tmp
-      - ../config/ortelius/config.json:/opt/config.json
-    restart: on-failure
-
-  avalanche:
-    image: avalanchego
+  geth:
+    image: ethereum
     restart: always
-    depends_on:
-      - indexer
     volumes:
-      - ../data/avalanche:/var/lib/avalanche
-      - ../config/avalanche/config.json:/opt/config.json
-      - ../config/avalanche/chain:/opt/avalanchego
-      - avalanche-ipcs:/tmp
+      - ../data/ethereum:/root/.ethereum
     labels:
-      - "traefik.http.routers.avalanche-<%= @name %>.rule=Host(`rpc.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
-      - "traefik.http.services.avalanche-<%= @name %>.loadbalancer.server.port=9650"
+      - "traefik.http.routers.geth-<%= @name %>.rule=Host(`rpc.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
+      - "traefik.http.services.geth-<%= @name %>.loadbalancer.server.port=8545"
       - "traefik.enable=true"
       <%- if @config['app']['ssl'] -%>
-      - "traefik.http.routers.avalanche-<%= @name %>.entrypoints=websecure"
-      - "traefik.http.routers.avalanche-<%= @name %>.tls=true"
+      - "traefik.http.routers.geth-<%= @name %>.entrypoints=websecure"
+      - "traefik.http.routers.geth-<%= @name %>.tls=true"
       <%- else -%>
-      - "traefik.http.routers.avalanche-<%= @name %>.entrypoints=web"
+      - "traefik.http.routers.geth-<%= @name %>.entrypoints=web"
       <%- end -%>
       - "traefik.http.middlewares.corsHeader.headers.accesscontrolallowmethods=GET,POST,OPTIONS,DELETE,PUT"
-      - "traefik.http.middlewares.corsHeader.headers.accesscontrolalloworiginlist=explorer.<%= @config['app']['domain'] %>,api.<%= @config['app']['domain'] %>,wallet.avax.network"
+      - "traefik.http.middlewares.corsHeader.headers.accesscontrolalloworiginlist=explorer.<%= @config['app']['domain'] %>"
       - "traefik.http.middlewares.corsHeader.headers.addvaryheader=true"
-    command: /bin/sh -cx "exec /avalanchego/build/avalanchego --config-file=/opt/config.json --network-id=1"
+    entrypoint: "geth --syncmode full --http --http.addr 0.0.0.0 --http.vhosts * --http.corsdomain * --ws --ws.addr 0.0.0.0 --ws.port 8546"
 
-  api:
-    <<: *ortelius-app
-    command: ["api", "-c", "/opt/config.json"]
-    labels:
-      - "traefik.http.routers.explorer-api-<%= @name %>.rule=Host(`api.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
-      - "traefik.http.services.explorer-api-<%= @name %>.loadbalancer.server.port=8080"
-      - "traefik.enable=true"
-      <%- if @config['app']['ssl'] -%>
-      - "traefik.http.routers.explorer-api-<%= @name %>.entrypoints=websecure"
-      - "traefik.http.routers.explorer-api-<%= @name %>.tls=true"
-      <%- else -%>
-      - "traefik.http.routers.explorer-api-<%= @name %>.entrypoints=web"
-      <%- end -%>
-      - "traefik.http.middlewares.corsHeader.headers.accesscontrolallowmethods=GET,POST,OPTIONS,DELETE,PUT"
-      - "traefik.http.middlewares.corsHeader.headers.accesscontrolalloworiginlist=explorer.<%= @config['app']['domain'] %>,api.<%= @config['app']['domain'] %>"
-      - "traefik.http.middlewares.corsHeader.headers.addvaryheader=true"
-
-  explorer:
-    image: <%= @config['images']['explorer'] %>
+  blockscout:
+    image: blockscout/blockscout
     restart: always
-    labels:
-      - "traefik.http.routers.explorer-<%= @name %>.rule=Host(`explorer.<%= @config['app']['domain'] %>`) && PathPrefix(`/`)"
-      - "traefik.http.services.explorer-<%= @name %>.loadbalancer.server.port=80"
-      - "traefik.enable=true"
-      <%- if @config['app']['ssl'] -%>
-      - "traefik.http.routers.explorer-<%= @name %>.entrypoints=websecure"
-      - "traefik.http.routers.explorer-<%= @name %>.tls=true"
-      <%- else -%>
-      - "traefik.http.routers.explorer-<%= @name %>.entrypoints=web"
-      <%- end -%>
-
-volumes:
-  avalanche-ipcs:
+    env_file:
+      -  ../config/blockscout.env

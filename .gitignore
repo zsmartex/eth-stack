@@ -1,15 +1,11 @@
 compose/*
 !compose/.gitkeep
 
-config/ortelius/*
-!config/ortelius/.gitkeep
 config/traefik/*
 !config/traefik/.gitkeep
 
-data/avalanche/*
-!data/avalanche/.gitkeep
-data/db/*
-!data/db/.gitkeep
+data/ethereum/*
+!data/ethereum/.gitkeep
 data/ssl/*
 !data/ssl/.gitkeep
 
