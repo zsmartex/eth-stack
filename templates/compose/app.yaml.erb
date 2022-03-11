@@ -22,7 +22,7 @@ services:
     entrypoint: "geth --syncmode full --http --http.addr 0.0.0.0 --http.vhosts * --http.corsdomain * --ws --ws.addr 0.0.0.0 --ws.port 8546"
 
   blockscout:
-    image: blockscout/blockscout
+    image: blockscout
     restart: always
     env_file:
       -  ../config/blockscout.env
