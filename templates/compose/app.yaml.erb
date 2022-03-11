@@ -24,6 +24,8 @@ services:
   blockscout:
     image: blockscout
     restart: always
+    depends_on:
+      - <%= @config['database']['host'] %>
     env_file:
       -  ../config/blockscout.env
     labels:
