@@ -6,6 +6,6 @@ images:
   explorer: explorer
 database:
   host: db
-  port: 3306
+  port: 5432
   user: root
   password: changeme
